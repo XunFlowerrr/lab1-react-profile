@@ -1,30 +1,14 @@
 import TiltedCard from "@/components/TiltedCard";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { ProfileCard, type ProfileCardProps } from "./ProfileCard";
 
-interface ProfileProps {
-  name: string;
-  role: string;
-  bio: string;
-  imageUrl?: string;
-}
-
-export function Profile({ name, role, bio, imageUrl }: ProfileProps) {
+export function Profile(props: ProfileCardProps) {
   return (
     <TiltedCard
       imageSrc="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-      altText={name}
-      captionText={name}
+      altText={props.name}
+      captionText={props.name}
       containerHeight="400px"
-      containerWidth="100%"
+      containerWidth="400px"
       imageHeight="300px"
       imageWidth="400px"
       rotateAmplitude={12}
@@ -32,28 +16,7 @@ export function Profile({ name, role, bio, imageUrl }: ProfileProps) {
       showMobileWarning={false}
       showTooltip={false}
       displayOverlayContent={true}
-      overlayContent={
-        <Card className="w-[400px] shadow-2xl border-muted-foreground/20">
-          <CardHeader className="flex flex-row items-center gap-4">
-            <Avatar className="size-16">
-              <AvatarImage src={imageUrl} alt={name} />
-              <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col gap-1">
-              <CardTitle className="text-2xl">{name}</CardTitle>
-              <Badge variant="secondary" className="w-fit">
-                {role}
-              </Badge>
-            </div>
-          </CardHeader>
-          <Separator />
-          <CardContent className="pt-6">
-            <CardDescription className="text-base text-foreground">
-              {bio}
-            </CardDescription>
-          </CardContent>
-        </Card>
-      }
+      overlayContent={<ProfileCard {...props} />}
     />
   );
 }
