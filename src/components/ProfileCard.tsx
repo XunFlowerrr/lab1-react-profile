@@ -13,7 +13,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heart, Users, BookOpen, UserPlus, Code2, Plus } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import Iridescence from "./Iridescence";
 
 export interface ProfileCardProps {
   name: string;
@@ -40,6 +41,14 @@ export function ProfileCard({
   const [skills, setSkills] = useState<string[]>(initialSkills);
   const [newSkill, setNewSkill] = useState("");
 
+  const randomColor = useMemo(() => {
+    return [
+      0.5 + Math.random() * 0.5,
+      0.5 + Math.random() * 0.5,
+      0.5 + Math.random() * 0.5,
+    ] as [number, number, number];
+  }, []);
+
   const addSkill = () => {
     if (newSkill.trim() && !skills.includes(newSkill.trim())) {
       setSkills((prev) => [...prev, newSkill.trim()]);
@@ -48,23 +57,33 @@ export function ProfileCard({
   };
 
   return (
-    <Card className="w-[400px] shadow-2xl border-muted-foreground/20 overflow-hidden">
-      <CardHeader className="flex flex-row items-center gap-4">
-        <Avatar className="size-16 border-2 border-primary/10">
-          <AvatarImage src={imageUrl} alt={name} />
-          <AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col gap-1">
-          <CardTitle className="text-2xl font-bold tracking-tight">
-            {name}
-          </CardTitle>
-          <Badge variant="secondary" className="w-fit font-semibold">
-            {role}
-          </Badge>
+    <Card className="w-[400px] shadow-2xl border-muted-foreground/20 overflow-hidden bg-card p-0 gap-0">
+      <div className="relative overflow-hidden p-6">
+        <div className="absolute inset-0 z-0">
+          <Iridescence colors={randomColor} speed={0.3} />
         </div>
-      </CardHeader>
+        <CardHeader className="relative flex flex-row items-center gap-4 text-white z-10 p-0">
+          <Avatar className="size-16 border-2 border-white/30 shadow-sm">
+            <AvatarImage src={imageUrl} alt={name} />
+            <AvatarFallback className="bg-white/20 text-white backdrop-blur-sm">
+              {name.slice(0, 2).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col gap-1">
+            <CardTitle className="text-2xl font-bold tracking-tight text-white drop-shadow-md">
+              {name}
+            </CardTitle>
+            <Badge
+              variant="secondary"
+              className="w-fit font-semibold bg-white/20 text-white border-none hover:bg-white/30 backdrop-blur-sm"
+            >
+              {role}
+            </Badge>
+          </div>
+        </CardHeader>
+      </div>
       <Separator />
-      <CardContent className="pt-6">
+      <CardContent className="p-6">
         <Tabs defaultValue="bio" className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-4">
             <TabsTrigger value="bio">About</TabsTrigger>
