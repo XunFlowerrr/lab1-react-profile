@@ -12,9 +12,19 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, Users, BookOpen, UserPlus, Code2, Plus } from "lucide-react";
+import {
+  Heart,
+  Users,
+  BookOpen,
+  UserPlus,
+  Code2,
+  Plus,
+  X,
+  Search,
+} from "lucide-react";
 import { useState, useMemo } from "react";
 import Iridescence from "./Iridescence";
+import PrismaticBurst from "./PrismaticBurst";
 
 export interface ProfileCardProps {
   name: string;
@@ -40,6 +50,7 @@ export function ProfileCard({
   const [likesCount, setLikesCount] = useState(0);
   const [skills, setSkills] = useState<string[]>(initialSkills);
   const [newSkill, setNewSkill] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const randomColor = useMemo(() => {
     return [
@@ -55,6 +66,14 @@ export function ProfileCard({
       setNewSkill("");
     }
   };
+
+  const deleteSkill = (skillToDelete: string) => {
+    setSkills((prev) => prev.filter((skill) => skill !== skillToDelete));
+  };
+
+  const filteredSkills = skills.filter((skill) =>
+    skill.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Card className="w-[400px] shadow-2xl border-muted-foreground/20 overflow-hidden bg-card p-0 gap-0">
@@ -128,23 +147,69 @@ export function ProfileCard({
 
           <TabsContent
             value="skills"
-            className="min-h-[140px] max-h-[200px] flex flex-col gap-4"
+            className="min-h-[140px] max-h-[200px] flex flex-col gap-3"
           >
-            <div className="flex flex-wrap gap-2 overflow-y-auto pr-2">
-              {skills.map((skill, index) => (
-                <Badge
-                  key={`${skill}-${index}`}
-                  variant="outline"
-                  className="bg-primary/5 border-primary/20 text-primary px-3 py-1"
-                >
-                  <Code2 className="size-3 mr-1" />
-                  {skill}
-                </Badge>
-              ))}
-            </div>
-            <div className="flex gap-2 mt-auto pt-2">
+            <div className="relative">
+              <Search className="absolute left-2 top-1/2 -translate-y-1/2 size-3 text-muted-foreground" />
               <Input
-                placeholder="Add skill..."
+                placeholder="Search skills..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="h-7 pl-7 text-xs bg-muted/50 border-none focus-visible:ring-1"
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-2 overflow-y-auto pr-2 py-1">
+              {filteredSkills.map((skill, index) => {
+                const isReact = skill.toLowerCase().includes("react");
+                return (
+                  <Badge
+                    key={`${skill}-${index}`}
+                    variant={isReact ? "default" : "outline"}
+                    className={`group relative px-3 py-1 transition-all duration-300 overflow-hidden ${
+                      isReact
+                        ? "font-bold border-none text-white shadow-lg scale-105"
+                        : "bg-primary/5 border-primary/20 text-primary hover:bg-primary/10"
+                    }`}
+                  >
+                    {isReact && (
+                      <div className="absolute inset-0 -z-10">
+                        <PrismaticBurst
+                          animationType="rotate3d"
+                          intensity={2}
+                          speed={0.5}
+                          distort={1.0}
+                          rayCount={12}
+                          colors={["#61dafb", "#00d8ff", "#ffffff"]}
+                        />
+                      </div>
+                    )}
+                    <div className="relative z-10 flex items-center">
+                      <Code2
+                        className={`size-3 mr-1 ${
+                          isReact ? "animate-pulse" : ""
+                        }`}
+                      />
+                      {skill}
+                      <button
+                        onClick={() => deleteSkill(skill)}
+                        className={`ml-1.5 rounded-full p-0.5 transition-colors ${
+                          isReact
+                            ? "hover:bg-white/20 text-white/80 hover:text-white"
+                            : "hover:bg-primary/20 text-primary/60 hover:text-primary"
+                        }`}
+                      >
+                        <X className="size-2.5" />
+                      </button>
+                    </div>
+                  </Badge>
+                );
+              })}
+            </div>
+
+            <div className="flex gap-2 mt-auto pt-2 border-t border-muted/50">
+              <Input
+                placeholder="Add new skill..."
                 value={newSkill}
                 onChange={(e) => setNewSkill(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && addSkill()}
