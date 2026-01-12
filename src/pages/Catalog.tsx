@@ -7,15 +7,30 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useCartStore } from "@/store/useCartStore";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart } from "lucide-react";
+import { toast } from "sonner";
 
 interface CatalogProps {
   searchQuery: string;
 }
 
 export default function Catalog({ searchQuery }: CatalogProps) {
+  const { addToCart } = useCartStore();
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleAddToCart = (
+    e: React.MouseEvent,
+    product: (typeof products)[0]
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(product);
+    toast.success(`${product.name} added to cart!`);
+  };
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -43,8 +58,15 @@ export default function Catalog({ searchQuery }: CatalogProps) {
                     {product.description}
                   </p>
                 </CardContent>
-                <CardFooter className="p-4 pt-0">
+                <CardFooter className="p-4 pt-0 flex items-center justify-between">
                   <span className="text-xl font-bold">${product.price}</span>
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    onClick={(e) => handleAddToCart(e, product)}
+                  >
+                    <ShoppingCart className="h-4 w-4" />
+                  </Button>
                 </CardFooter>
               </Card>
             </Link>

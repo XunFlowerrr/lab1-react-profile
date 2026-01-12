@@ -1,16 +1,26 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { Search, ShoppingBag } from "lucide-react";
+import { Search, ShoppingBag, ShoppingCart } from "lucide-react";
+import { useCartStore } from "@/store/useCartStore";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface HeaderProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
+  onCartClick: () => void;
 }
 
-export default function Header({ searchQuery, setSearchQuery }: HeaderProps) {
+export default function Header({
+  searchQuery,
+  setSearchQuery,
+  onCartClick,
+}: HeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === "/";
+  const { getTotalItems } = useCartStore();
+  const totalItems = getTotalItems();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -38,7 +48,7 @@ export default function Header({ searchQuery, setSearchQuery }: HeaderProps) {
         </div>
 
         <div className="flex flex-1 items-center justify-end space-x-4">
-          <div className="w-full max-w-sm relative">
+          <div className="w-full max-w-sm relative hidden sm:block">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
@@ -48,6 +58,23 @@ export default function Header({ searchQuery, setSearchQuery }: HeaderProps) {
               onChange={handleSearchChange}
             />
           </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+            onClick={onCartClick}
+          >
+            <ShoppingCart className="h-5 w-5" />
+            {totalItems > 0 && (
+              <Badge
+                className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 rounded-full"
+                variant="destructive"
+              >
+                {totalItems}
+              </Badge>
+            )}
+          </Button>
         </div>
       </div>
     </header>

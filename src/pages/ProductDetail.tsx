@@ -2,10 +2,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import { products } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ShoppingCart } from "lucide-react";
+import { useCartStore } from "@/store/useCartStore";
+import { toast } from "sonner";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { addToCart } = useCartStore();
 
   const product = products.find((p) => p.id === id);
 
@@ -17,6 +20,11 @@ export default function ProductDetail() {
       </div>
     );
   }
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    toast.success(`${product.name} added to cart!`);
+  };
 
   return (
     <div className="container mx-auto py-12 px-4">
@@ -54,7 +62,11 @@ export default function ProductDetail() {
           </div>
 
           <div className="pt-4 space-y-3">
-            <Button className="w-full sm:w-auto" size="lg">
+            <Button
+              className="w-full sm:w-auto"
+              size="lg"
+              onClick={handleAddToCart}
+            >
               <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
             </Button>
           </div>
