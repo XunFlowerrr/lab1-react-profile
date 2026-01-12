@@ -19,7 +19,7 @@ export const products: Product[] = [
     name: "Denim Jacket",
     price: 85,
     description: "Timeless denim jacket with a modern fit.",
-    image: "https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?q=80&w=300&h=300&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1543076447-215ad9ba6923?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   },
   {
     id: "3",
