@@ -7,9 +7,9 @@ export function Profile(props: ProfileCardProps) {
       imageSrc="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
       altText={props.name}
       captionText={props.name}
-      containerHeight="400px"
+      containerHeight="500px"
       containerWidth="400px"
-      imageHeight="300px"
+      imageHeight="500px"
       imageWidth="400px"
       rotateAmplitude={12}
       scaleOnHover={1.05}
